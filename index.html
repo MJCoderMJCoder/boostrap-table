@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <script type="text/javascript" src="./jquery.min.js"></script>
+    <!-- bootstrap的js包 -->
+    <script type="text/javascript" src="./bootstrap/bootstrap.min.js"></script>
+    <!-- bootstrap的表格包-->
+    <script type="text/javascript" src="./table/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="./table/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" href="./bootstrap/bootstrap.min.css"/>
+
+    <!-- bootstrap表格导出初始化-->
+    <script type="text/javascript" src="./table_export/table-export.js"></script>
+    <!-- bootstrap表格导出执行-->
+    <script type="text/javascript" src="./table_export/tableExport.js"></script>
+    <script type="text/javascript" src="./table_export/jquery.base64.js"></script>
+    <script type="text/javascript" src="./table_export/main.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- data-url="data1.json"-->
+<div id="showCoverSheetTmpl" class="table-responsive">
+    <table class="countTable"
+           data-classes="table table-bordered table-condensed"
+           data-toggle="table"
+           data-pagination="true"
+           data-search="false">
+        <caption style="text-align:center;">纸纷飞</caption>
+        <thead>
+        <tr>
+            <th data-field="exceptionDiagnose">异常诊断</th>
+            <th data-field="routine12LeadCount">常规12导</th>
+            <th data-field="routine18LeadCount">常规18导</th>
+            <th data-field="dynamicEcgCount">动态心电</th>
+            <th data-sortable="true" data-field="allCountsCount">总计</th>
+        </tr>
+        <tbody></tbody>
+    </table>
+</div>
+<!--注意：类名需要为export-excel，要不就修改上面table-export.js文件中获取的控件-->
+<button id="exportBtn" class="export-excel btn btn-default" data-table=".countTable" style="width: 100px">导出Excel
+</button>
+<button id="printModal" class="btn btn-danger" style="width: 100px"> 准备打印</button>
+<div class="modal fade" id="popPrintSheet" role="dialog" aria-labelledby="printSheet" aria-hidden="true"
+     data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog middle-size">
+        <div class="modal-content marginT20px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="printSheetTitle">
+                    <button id="print" class="btn btn-danger" style="width: 100px"> 打印</button>
+                </h4>
+            </div>
+            <div class="modal-body left20pc-right" style="height:500px; overflow:scroll;">
+                <!--                <div id="showCoverSheetTmpl" style="display: none;"></div>-->
+                <div id="showCoverSheetTmpModal" class="table-responsive">
+                    <table class="countTable"
+                           date-class="table  table-bordered table-condensed"
+                           data-toggle="table"
+                           data-pagination="true"
+                           data-search="false">
+                        <caption style="text-align:center;">纸纷飞</caption>
+                        <thead>
+                        <tr>
+                            <th data-field="exceptionDiagnose">异常诊断</th>
+                            <th data-field="routine12LeadCount">常规12导</th>
+                            <th data-field="routine18LeadCount">常规18导</th>
+                            <th data-field="dynamicEcgCount">动态心电</th>
+                            <th data-sortable="true" data-field="allCountsCount">总计</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    //注意：需要在整个页面加载的时候初始化table-export.js文件中的变量TableExport
+    TableExport.init();
+    //初始化表格
+    $(".countTable").bootstrapTable({
+        // pagination: true,
+        // // search: true,
+        // striped: false,
+        // columns: [{
+        //     field: 'id',
+        //     title: 'Item ID',
+        //     align: "center"
+        // }, {
+        //     field: 'name',
+        //     title: 'Item Name',
+        //     align: "center"
+        // }, {
+        //     sortable: true,
+        //     field: 'price',
+        //     title: 'Item Price',
+        //     align: "center"
+        // }],
+        cache: false,
+        formatLoadingMessage: function () {
+            return "";
+        },
+        formatNoMatches: function () {  //没有匹配的结果
+            return '无符合条件的记录';
+        },
+        // data: [{
+        //     id: 1,
+        //     name: 'Item 1',
+        //     price: '$1'
+        // }, {
+        //     id: 2,
+        //     name: 'Item 2',
+        //     price: '$2'
+        // }]
+    });
+    //    加载数据：
+    //     asyncPost({
+    //         url: "getExceptionDiagnoseCount.json",
+    //         data: {"startCheckTime": startCheckTime, "endCheckTime": endCheckTime, "options": checkBoxArr},
+    //         async: false,
+    //         dataType: 'json',
+    //         success: function (rst) {
+    // //为表格动态加载数据
+    //             $(".countTable").bootstrapTable('load', rst.data);
+    //         }
+    //     });
+    $(".countTable").bootstrapTable('load', JSON.parse("[{\"exceptionDiagnose\":\"心机缺血\",\"routine12LeadCount\":\"1\",\"routine18LeadCount\":\"2\",\"dynamicEcgCount\":\"3\",\"allCountsCount\":\"6\"},{\"exceptionDiagnose\":\"心机梗死\",\"routine12LeadCount\":\"2\",\"routine18LeadCount\":\"3\",\"dynamicEcgCount\":\"4\",\"allCountsCount\":\"9\"},{\"exceptionDiagnose\":\"房室阻滞\",\"routine12LeadCount\":\"3\",\"routine18LeadCount\":\"3\",\"dynamicEcgCount\":\"4\",\"allCountsCount\":\"10\"}]"));
+    //打印方法：
+    $("#printModal").click(function () {
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {//IE
+            let hasStrictMode = (function () {
+                "use strict";
+                return this === undefined;
+            }());
+            if (hasStrictMode && !!!window.attachEvent) {//IE11
+                var print = document.getElementById("showCoverSheetTmpl").innerHTML;
+                print = print + "<br/><link rel=\"stylesheet\" href=\"./bootstrap/bootstrap.min.css\"/>"
+                print = print + '<SCRIPT language=javascript> function printView(){hidden();document.all.WebBrowser.ExecWB(7,1);document.all.WebBrowser.ExecWB(45,1); }function hidden(){document.all("printView").style.display="none";}<\/script>';
+                print = print + "<OBJECT   classid=CLSID:8856F961-340A-11D0-A96B-00C04FD705A2   height=0   id=WebBrowser   width=0></OBJECT> <input id=printView class='btn btn-danger' name=Button   onClick=printView()   type=button   value=打印>";
+                var newWindow = window.open("", "纸纷飞",
+                    "toolbar=no,titlebar=no,status=no,scrollbars=yes,menubar=no,resizable=no,location=no,menubar=no");
+                newWindow.document.open("text/html");
+                newWindow.document.write(print);
+                newWindow.document.close();
+            } else {
+                alert("您当前IE浏览器版本太低，请升级至最新版！");
+            }
+        } else {
+            alert("请使用IE浏览器最新版！进行打印。");
+            //谷歌。。。
+            // $("#popPrintSheet").modal();
+            // $("#print").click(function () {
+            //     //谷歌、IE兼容，但是都有点问题
+            //     var printHtml = document.getElementById("showCoverSheetTmpl").innerHTML;
+            //     //window.open(URL,name,specs,replace)
+            //     //URL	可选。打开指定的页面的URL。如果没有指定URL，打开一个新的空白窗口
+            //     //name	可选。指定target属性或窗口的名称。支持以下值：
+            //     //         _blank - URL加载到一个新的窗口。这是默认
+            //     //         _parent - URL加载到父框架
+            //     //         _self - URL替换当前页面
+            //     //         _top - URL替换任何可加载的框架集
+            //     //         name - 窗口名称
+            //     var wind = window.open("", "_blank",
+            //         "toolbar=yes,titlebar=yes,status=yes,scrollbars=yes,menubar=yes,resizable=no,location=yes,menubar=no");
+            //     // stypes可以增加一些样式 控制弹出页面；
+            //     var stypes = "<style>"
+            //         + ".coversheet-pageBoder{"
+            //         + "	padding: 0px;"
+            //         + "	margin-top: 0px;"
+            //         + "	border: 0px solid black;"
+            //         + "	page-break-after: always;"
+            //         + "	border-radius: 0px;"
+            //         + "	box-shadow: 0 0px 0px 0px rgba(0,0,0,.08), 0 0px 0px rgba(0,0,0,.08);"
+            //         + "}"
+            //         + ".noprint{display: none;}"
+            //         + "</style>"
+            //         + "<link rel=\"stylesheet\" href=\"./bootstrap/bootstrap.min.css\"/>";
+            //     printHtml = stypes + printHtml;
+            //     wind.document.body.innerHTML = printHtml;
+            //     wind.print();
+            //     wind.close(); //wind.close() 最好是加上，可以控制打印窗口关闭后 直接 关闭新打开的窗口。
+            // });
+        }
+    });
+
+</script>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <SCRIPT language="JavaScript">
+        function myexplorer() {
+
+            var createDate = new Date();
+            console.log(createDate.getFullYear() + "" + (createDate.getMonth() + 1) + "" + createDate.getDate());
+            console.log(createDate.getFullYear() + ""
+                + (((createDate.getMonth() + 1) + "").length < 2 ? ("0" + (createDate.getMonth() + 1)) : (createDate.getMonth() + 1)) + ""
+                + ((createDate.getDate() + "").length < 2 ? ("0" + createDate.getDate()) : createDate.getDate()));
+
+
+            var explorer = window.navigator.userAgent;
+            if (explorer.indexOf("QQBrowser") >= 0 || explorer.indexOf("QQ") >= 0) {
+                return myexplorer = "腾讯QQ";
+            } else if (explorer.indexOf("Safari") >= 0 && explorer.indexOf("MetaSr") >= 0) {
+                return myexplorer = "搜狗";
+            } else if (!!window.ActiveXObject || "ActiveXObject" in window) {//IE
+                if (!window.XMLHttpRequest) {
+                    return myexplorer = "IE6";
+                } else if (window.XMLHttpRequest && !document.documentMode) {
+                    return myexplorer = "IE7";
+                } else if (!-[1,] && document.documentMode && !("msDoNotTrack" in window.navigator)) {
+                    return myexplorer = "IE8";
+                } else {//IE9 10 11
+                    var hasStrictMode = (function () {
+                        "use strict";
+                        return this === undefined;
+                    }());
+                    if (hasStrictMode) {
+                        if (!!!window.attachEvent) {
+                            return myexplorer = "IE11";
+                        } else {
+                            return myexplorer = "IE10";
+                        }
+                    } else {
+                        return myexplorer = "IE9";
+                    }
+                }
+            } else {//非IE
+                if (explorer.indexOf("LBBROWSER") >= 0) {
+                    return myexplorer = "猎豹";
+                } else if (explorer.indexOf("360ee") >= 0) {
+                    return myexplorer = "360极速浏览器";
+                } else if (explorer.indexOf("360se") >= 0) {
+                    return myexplorer = "360安全浏览器";
+                } else if (explorer.indexOf("se") >= 0) {
+                    return myexplorer = "搜狗浏览器";
+                } else if (explorer.indexOf("aoyou") >= 0) {
+                    return myexplorer = "遨游浏览器";
+                } else if (explorer.indexOf("qqbrowser") >= 0) {
+                    return myexplorer = "QQ浏览器";
+                } else if (explorer.indexOf("baidu") >= 0) {
+                    return myexplorer = "百度浏览器";
+                } else if (explorer.indexOf("Firefox") >= 0) {
+                    return myexplorer = "火狐";
+                } else if (explorer.indexOf("Maxthon") >= 0) {
+                    return myexplorer = "遨游";
+                } else if (explorer.indexOf("Chrome") >= 0) {
+                    return myexplorer = "谷歌（或360伪装）";
+                } else if (explorer.indexOf("Opera") >= 0) {
+                    return myexplorer = "欧朋";
+                } else if (explorer.indexOf("TheWorld") >= 0) {
+                    return myexplorer = "世界之窗";
+                } else if (explorer.indexOf("Safari") >= 0) {
+                    return myexplorer = "苹果";
+                } else {
+                    return myexplorer = "其他";
+                }
+            }
+        }</script>
+    <BR>
+    <SCRIPT>document.write("客户端浏览器是：" + myexplorer());</script>
+</head>
+<body>
+
+</body>
+</html>
