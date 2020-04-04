@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Div拖拽</title>
+    <style type="text/css">
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        #firstFloor {
+            width: 80%;
+            height: 60%;
+            padding: 10%;
+            background-color: black;
+            border-radius: 10%;
+            z-index: 0;
+            position: absolute;
+        }
+
+        #firstFloor h1, h2, h3 {
+            color: white;
+        }
+
+        #secondFloor {
+            width: 40%;
+            top: 30%;
+            padding: 5%;
+            background-color: white;
+            border-radius: 20%;
+            position: absolute;
+        }
+    </style>
+
+</head>
+<body onload="onload()">
+<div id="firstFloor">
+    <h1>我是第一层</h1>
+    <h2>static</h2>
+    <h3>元素框正常生成。块级元素生成一个矩形框，作为文档流的一部分，行内元素则会创建一个或多个行框，置于其父元素中。</h3>
+    <h2>relative</h2>
+    <h3>元素框偏移某个距离。元素仍保持其未定位前的形状，它原本所占的空间仍保留。</h3>
+    <h2>absolute</h2>
+    <h3>
+        元素框从文档流完全删除，并相对于其包含块定位。包含块可能是文档中的另一个元素或者是初始包含块。元素原先在正常文档流中所占的空间会关闭，就好像元素原来不存在一样。元素定位后生成一个块级框，而不论原来它在正常流中生成何种类型的框。</h3>
+    <h2>fixed</h2>
+    <h3>元素框的表现类似于将 position 设置为 absolute，不过其包含块是视窗本身。</h3>
+</div>
+<div id="secondFloor">
+    <h1>我是第二层</h1>
+    无名块框
+    <p>
+        块级框从上到下一个接一个地排列，框之间的垂直距离是由框的垂直外边距计算出来。
+    <hr/>
+
+    行内框在一行中水平布置。可以使用水平内边距、边框和外边距调整它们的间距。但是，垂直内边距、边框和外边距不影响行内框的高度。由一行形成的水平框称为行框（Line
+    Box），行框的高度总是足以容纳它包含的所有行内框。不过，设置行高可以增加这个框的高度。
+    </p>
+    无名块框
+    <h1>我是第二层</h1>
+</div>
+<script language="JavaScript">
+    function onload() {
+        //获取元素
+        var dv = document.getElementById('secondFloor');
+        console.log(dv);
+        var x = 0;
+        var y = 0;
+        var l = 0;
+        var t = 0;
+        var isDown = false;
+        //鼠标按下事件
+        dv.onmousedown = function (e) {
+            //获取x坐标和y坐标
+            x = e.clientX;
+            y = e.clientY;
+
+            //获取左部和顶部的偏移量
+            l = dv.offsetLeft;
+            t = dv.offsetTop;
+            //开关打开
+            isDown = true;
+            //设置样式
+            dv.style.cursor = 'move';
+        }
+        //鼠标移动
+        window.onmousemove = function (e) {
+            if (isDown == false) {
+                return;
+            }
+            //获取x和y
+            var nx = e.clientX;
+            var ny = e.clientY;
+            //计算移动后的左偏移量和顶部的偏移量
+            var nl = nx - (x - l);
+            var nt = ny - (y - t);
+
+            dv.style.left = nl + 'px';
+            dv.style.top = nt + 'px';
+        }
+        //鼠标抬起事件
+        dv.onmouseup = function () {
+            //开关关闭
+            isDown = false;
+            dv.style.cursor = 'default';
+        }
+    }
+</script>
+</body>
+</html>
